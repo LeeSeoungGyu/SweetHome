@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweethome.mapper.ReservationMapper">
+   <select id="getTimeList" resultType="_int">
+      select count(*) from reservation where reservdate =#{date} and reservtime =#{time}
+   </select>
+   <insert id="reservation">
+      insert into reservation(userid,reservdate,reservtime,reservcontents) values(#{name},#{date},#{time},#{content})
+   </insert>
+   <select id="counselList" resultType="com.sweethome.domain.ReservationDTO">
+      select * from reservation where reservdate = #{date}
+   </select>
+</mapper>

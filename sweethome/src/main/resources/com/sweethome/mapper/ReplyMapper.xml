@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweethome.mapper.ReplyMapper">
+   <insert id="insert">
+      insert into t_reply(replycontents,userid,boardnum)
+      values(#{replycontents},#{userid},#{boardnum})
+   </insert>
+   <select id="getNum" resultType="long">
+      select max(replynum) from t_reply where userid=#{userid}
+   </select>
+   <select id="getTotal" resultType="_int">
+      select count(*) from t_reply where boardnum=#{boardnum}
+   </select>
+   <select id="getList" resultType="com.sweethome.domain.ReplyDTO">
+      select * from t_reply where boardnum=#{boardnum}
+      limit #{cri.startrow},#{cri.amount}
+   </select>
+   <update id="update">
+      update t_reply set replycontents=#{replycontents}, updatedate=now()
+      where replynum=#{replynum}
+   </update>
+   <delete id="delete">
+      delete from t_reply where replynum=#{replynum}
+   </delete>
+</mapper>
+
+
+
+
+
+

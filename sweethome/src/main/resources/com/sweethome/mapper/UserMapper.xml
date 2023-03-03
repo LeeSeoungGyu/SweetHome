@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweethome.mapper.UserMapper">
+   <!-- md5('문자열') : 단방향 암호화 함수 -->
+   <!-- binary('문자열') : 대소문자까지 비교 -->
+   <select id="goshopping" resultType="com.sweethome.domain.ProductDTO">
+	  select * from product
+   </select>	
+   <insert id="insertshoppinglist">
+   	  insert into shoppinglist values(#{userid},#{productnum})
+   </insert>
+   <select id="showshoppinglist" resultType="com.sweethome.domain.ProductDTO">
+   	  select * from product p join shoppinglist sl on p.productnum = sl.productnum where userid = #{userid}	
+   </select>
+   <delete id="deleteshoppinglist">
+   	  delete from shoppinglist list where userid = #{userid}
+   </delete>
+   <select id="getshoppinglist" resultType="string">
+   	  select productnum from shoppinglist where userid = #{userid}
+   </select>
+   <insert id="insertorderlist">
+   	  insert into orderlist (ordernum_s,ordernum_i,productnum,userid) values("D",rand()*100000000,#{productnum},#{userid})
+   </insert>
+   <select id="getorderlistsimple" resultType="string">
+   	  select productnum from orderlist where userid = #{userid}
+   </select>
+   <select id="getorderlist" resultType="com.sweethome.domain.ProductDTO">
+   	  select * from product where productnum=#{productnum}
+   </select>
+   <select id="getorderdate" resultType="com.sweethome.domain.OrderDTO">
+      select * from orderlist where userid = #{userid} order by orderdate desc;
+   </select>
+   <select id="getordernum" resultType="string">
+   	  select concat(ordernum_s,ordernum_i) as ordernum from orderlist where userid = #{userid}
+   </select>
+   <update id="modifyorder">
+   	  update orderlist set p_condition = "취소완료" where userid = #{userid}
+   </update>
+   <delete id="deleteorderlist">
+   	  delete from orderlist where userid=#{userid}
+   </delete>
+      <select id="getList" resultType="com.sweethome.domain.DonateDTO">
+      select * from donate where
+      <if test="keyword != null">
+         (name like('%${keyword}%'))
+      </if>
+      <![CDATA[
+         0 < donatenum order by donatenum desc limit #{startrow},#{amount}
+      ]]>
+   </select>
+      <select id="getTotal" resultType="_int">
+      select count(*) from donate 
+   </select>
+   <insert id="donateaction">
+      insert into donate(name,money,content) values(#{name},#{money},#{content})
+   </insert>
+   <insert id="join">
+     insert into user (userid,userpw,username,usergender,zipcode,useraddr,useraddrdetail,useraddretc,userbirth,userphone)values(#{userid},#{userpw},#{username},#{usergender},
+      #{zipcode},#{useraddr},#{useraddrdetail},#{useraddretc},#{userbirth}, #{userphone})
+   </insert>
+   <select id="login" resultType="com.sweethome.domain.UserDTO">
+      select * from user where userid=#{userid} and userpw=#{userpw}
+   </select>
+   <select id="checkid" resultType="string">
+      select userid from user where userphone=#{userphone} and username=#{username}
+   </select>
+   <select id="checkpw" resultType="_int">
+      select count(*) from user where userid=#{userid} and userphone=#{userphone}
+   </select>
+   <update id="updatepw">
+      update user set userpw=#{userpw} where userid=#{userid}
+   </update>
+   <update id="updatephone">
+      update user set userphone=#{userphone} where userid=#{userid}
+   </update>
+   <select id="getUserAge" resultType="_int">
+      SELECT FLOOR( (CAST(REPLACE(CURRENT_DATE,'-','') AS UNSIGNED) - 
+       CAST(REPLACE(#{userbirth},'-','') AS UNSIGNED)) / 10000 );
+   </select>
+   <select id ="userIdExist" resultType="_int">
+         select count(*) from user where userid=#{userid}
+   </select>
+   <select id="checkphone" resultType="_int">
+         select count(*) from user where userphone=#{userphone}
+   </select>
+   <update id="changepw">
+         update user set userpw=#{userpw} where userid=#{userid} and userpw=#{correntpw}
+   </update>
+    <insert id="kJoin">
+   		insert into k_user (userid, username, email) values(#{kuser.userid},#{kuser.username},#{kuser.email})
+   </insert>
+   <update id="addPhoto">
+   		update user set userphoto = #{userphoto} where userid = #{userid}
+   </update>
+    <select id="newProfile" resultType="string">
+   		select userphoto from user where userid=#{userid}
+   </select>
+</mapper>
